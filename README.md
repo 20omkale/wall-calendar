@@ -1,53 +1,126 @@
-# 🗓️ Premium Interactive Wall Calendar
+# 🗓️ Interactive Wall Calendar
 
-A production-grade, highly polished interactive wall calendar component built with **Next.js 16**, **TypeScript**, and **Framer Motion**. This project emulates the aesthetic and feel of a physical wall calendar while providing modern digital features like date range selection and persistent notes.
+A **production-grade interactive wall calendar** built with Next.js 16, TypeScript, and vanilla CSS. Designed to feel and look like a real physical wall calendar — complete with spiral binder, seasonal hero images, and smooth animations.
+
+> Built as a frontend engineering challenge submission. No backend. No UI libraries. Pure frontend craftsmanship.
+
+---
 
 ## ✨ Features
 
-- **Wall Calendar Aesthetic**: Realistic spiral binder, paper textures, and shadows.
-- **Dynamic Hero Section**: Scenic month-based imagery with a unique jagged transition effect.
-- **Advanced Day Range Selection**: Fluid UI for selecting start, end, and middle date states.
-- **Persistent Notes Section**: Integrated "lined paper" memos that persist across sessions using `localStorage`.
-- **Premium Animations**: Smooth 3D-like page flips and layout transitions powered by Framer Motion.
-- **Fully Responsive**: Optimized for Desktop (side-by-side) and Mobile (vertically stacked) layouts.
-- **Top 1% Engineering**: Clean component architecture, custom hooks for logic separation, and high-performance rendering.
+- **📅 Date Range Selection** — Click any two dates to highlight a range with rounded pill-style highlighting and a summary bar showing the number of days selected
+- **🎨 Dynamic Monthly Theming** — Each month has its own accent color and seasonal image. Theme is applied globally via CSS custom properties injected at runtime
+- **🗒️ Persistent Notes** — A lined-paper memo area per month, saved automatically to `localStorage` so notes survive page refreshes
+- **🎉 Holiday Markers** — 19 holidays across the year shown as emoji badges on the calendar, with hover tooltips showing the holiday name
+- **📖 Page-Flip Animation** — Smooth CSS keyframe animation on every month navigation
+- **📱 Fully Responsive** — Side-by-side panel layout on desktop (no scroll), gracefully stacked on mobile with touch-friendly targets
+- **🌀 Spiral Binder** — Realistic physical calendar aesthetic with a ring binder at the top
 
-## 🛠️ Technology Stack
+---
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Vanilla CSS (CSS Modules) + Design Tokens
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Persistence**: Client-side `localStorage`
+## 🛠️ Tech Stack
+
+| Technology | Usage |
+|---|---|
+| **Next.js 16** | App Router, SSR-ready |
+| **TypeScript** | Full type safety across components and hooks |
+| **Vanilla CSS** | Custom design system with CSS variables — no Tailwind, no UI library |
+| **date-fns** | Lightweight date manipulation and formatting |
+| **localStorage** | Client-side note persistence (no backend required) |
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18.x or later
-- npm or yarn
+- Node.js 18+
+- npm 9+
 
 ### Installation
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+```bash
+# Clone the repo
+git clone https://github.com/20omkale/wall-calendar.git
+cd wall-calendar
 
-## 📐 Design Philosophy
+# Install dependencies
+npm install --legacy-peer-deps
 
-The project was designed to "wow" at first glance. Key decisions include:
-- **Depth & Perspective**: Using CSS `perspective` and `box-shadow` to make the calendar feel like an object hanging on a wall.
-- **Jagged Geometry**: Move away from boring rectangular grids by using SVG `clip-path` for organic transitions.
-- **Micro-interactions**: Subtle hover states and dotted today-indicators to enhance UX.
+# Start the dev server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Production Build
+
+```bash
+npm run build
+npm run start
+```
 
 ---
-Built with ❤️ by Antigravity
+
+## 📁 Project Structure
+
+```
+wall-calendar/
+├── app/
+│   ├── globals.css        # Full design system — tokens, layout, animations
+│   ├── layout.tsx         # Root layout with metadata
+│   └── page.tsx           # Main calendar page — assembles all components
+│
+├── components/
+│   └── Calendar/
+│       ├── Header.tsx     # Hero image, month badge, navigation, theming
+│       ├── Grid.tsx       # Date grid, range highlighting, holiday markers
+│       └── Notes.tsx      # Lined-paper memo textarea
+│
+├── hooks/
+│   ├── useCalendar.ts     # Month navigation + date range selection logic
+│   └── useNotes.ts        # localStorage persistence for monthly notes
+│
+├── types/
+│   └── calendar.ts        # TypeScript interfaces (DateRange, DayState, etc.)
+│
+└── utils/
+    └── holidays.ts        # Holiday registry with emoji + tooltip data
+```
+
+---
+
+## 🎨 Design Decisions
+
+### Why vanilla CSS instead of Tailwind?
+The physical calendar aesthetic required precise control over custom animations, CSS `clip-path`, repeating gradients for lined paper, and dynamic CSS variable injection. Tailwind would have added significant overhead for little benefit in this use case.
+
+### Why date-fns instead of dayjs or moment?
+`date-fns` is tree-shakeable, immutable by default, and TypeScript-native. It's the right choice for a calendar component where you're doing a lot of week/day boundary calculations.
+
+### How does dynamic theming work?
+The `Header` component reads a `MONTH_DATA` map and calls `document.documentElement.style.setProperty('--accent', ...)` on mount and whenever the month changes. All color-dependent CSS reads from these variables, so the entire UI recolors instantly without re-renders.
+
+### How is the range selection implemented?
+`useCalendar` maintains a `{ start, end }` state. On first click, `start` is set. On second click, if the new date is after `start`, `end` is set (with auto-swap if before). `getDayState(date)` returns `'start' | 'end' | 'middle' | 'none'` for each cell, which drives CSS class assignment in `Grid.tsx`.
+
+---
+
+## 📱 Responsive Behavior
+
+| Breakpoint | Layout |
+|---|---|
+| `> 700px` (Desktop) | Side-by-side: Notes panel left (195px), Calendar grid right. Full calendar fits in `100vh` — no scroll |
+| `≤ 700px` (Mobile) | Stacked: Hero → Grid → Notes. Body scroll re-enabled. `font-size: 16px` on textarea prevents iOS auto-zoom |
+
+---
+
+## 🌐 Live Demo
+
+[Deployed on Vercel →](https://wall-calendar.vercel.app)
+
+---
+
+## 📄 License
+
+MIT — feel free to use, fork, and improve.

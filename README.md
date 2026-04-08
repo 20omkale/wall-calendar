@@ -117,7 +117,7 @@ The `Header` component reads a `MONTH_DATA` map and calls `document.documentElem
 
 ## 🌐 Live Demo
 
-[Deployed on Vercel →](https://wall-calendar.vercel.app)
+[Deployed on Vercel →](https://wall-calendar-81h7.vercel.app)
 
 ---
 

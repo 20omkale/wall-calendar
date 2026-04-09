@@ -329,7 +329,8 @@ body {
     var(--border) 25px,
     var(--border) 26px
   );
-  padding-left: 2px;
+  padding: 3px 0 0 32px; /* Align vertical placement, push right of red line */
+  background-attachment: local; /* Pin background lines to text scroll */
   caret-color: var(--accent);
   overflow-y: auto;
 }
@@ -460,11 +461,12 @@ body {
 /* Holiday emoji */
 .holiday-badge {
   position: absolute;
-  top: 0; right: 2px;
-  font-size: 9px;
+  top: -4px; right: -5px;
+  font-size: 11px;
   line-height: 1;
   z-index: 3;
   pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
 }
 
 .holiday-tooltip {
@@ -595,8 +597,17 @@ body {
 
   .page-flip-outer { height: 200px; }
 
-  .hero-badge .hero-month { font-size: 36px; }
-  .hero-badge { bottom: 42px; right: 18px; }
+  .hero-badge { 
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    bottom: 30px; 
+    width: 90%; /* Ensure no overflow */
+  }
+
+  .hero-badge .hero-year { text-align: center; }
+  .hero-badge .hero-month { font-size: clamp(28px, 8vw, 42px); }
 
   /* Hide desktop sidebar, show stacked notes */
   .notes-panel { display: none; }
@@ -635,6 +646,8 @@ body {
 
   .mobile-notes-section .notes-textarea {
     min-height: 130px;
-    font-size: 16px;  /* prevents iOS auto-zoom */
+    font-size: 14px;
+    line-height: 26px;
+    padding: 3px 0 0 32px;
   }
 }

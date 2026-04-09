@@ -95,18 +95,19 @@ export const Grid: React.FC<GridProps> = ({
 
               <span className={numClasses.join(' ')}>
                 {format(day, 'd')}
-              </span>
-
-              {/* Holiday emoji badge */}
-              {holiday && inMonth && (
-                <>
+                {/* Holiday emoji badge anchored to the number */}
+                {holiday && inMonth && (
                   <span className="holiday-badge" aria-hidden="true">
                     {holiday.emoji}
                   </span>
-                  <div className="holiday-tooltip">
-                    {holiday.emoji} {holiday.name}
-                  </div>
-                </>
+                )}
+              </span>
+
+              {/* Holiday tooltip */}
+              {holiday && inMonth && (
+                <div className="holiday-tooltip">
+                  {holiday.emoji} {holiday.name}
+                </div>
               )}
             </div>
           );

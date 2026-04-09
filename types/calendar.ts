@@ -1,5 +1,5 @@
 export interface DateRange {
-  id: string;
+  id?: string;
   start: Date | null;
   end: Date | null;
 }

@@ -78,7 +78,7 @@ export const useCalendar = () => {
       
       setSavedRanges(prev => [...prev, newRange]);
       setDraftStart(null);
-      setActiveRangeId(newRange.id);
+      setActiveRangeId(newRange.id as string);
       return;
     }
 
@@ -90,7 +90,7 @@ export const useCalendar = () => {
     });
 
     if (clickedRange) {
-      setActiveRangeId(prev => prev === clickedRange.id ? null : clickedRange.id);
+      setActiveRangeId(prev => prev === clickedRange.id ? null : (clickedRange.id as string));
     } else {
       setDraftStart(date);
       setActiveRangeId(null);

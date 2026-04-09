@@ -14,25 +14,36 @@ export default function Home() {
     monthName,
     year,
     range,
+    activeRangeId,
     nextMonth,
     prevMonth,
     handleDateClick,
     getDayState,
-    setRange,
+    clearActiveRange,
   } = useCalendar();
 
   const { saveNote, getNote } = useNotes();
 
-  const currentMonthKey = useMemo(
-    () => `month-${format(currentDate, 'yyyy-MM')}`,
-    [currentDate]
-  );
+  const activeNoteKey = useMemo(() => {
+    if (activeRangeId) return `range-${activeRangeId}`;
+    return `month-${format(currentDate, 'yyyy-MM')}`;
+  }, [activeRangeId, currentDate]);
+
+  const notesTitle = useMemo(() => {
+    if (activeRangeId && range.start) {
+      if (range.end) {
+        return `${format(range.start, 'MMM d')} - ${format(range.end, 'MMM d')} Notes`;
+      }
+      return `${format(range.start, 'MMM d')} Notes`;
+    }
+    return `${monthName} Memos`;
+  }, [activeRangeId, range, monthName]);
 
   const monthIndex = getMonth(currentDate);
 
   const handleClearRange = useCallback(() => {
-    setRange({ start: null, end: null });
-  }, [setRange]);
+    clearActiveRange();
+  }, [clearActiveRange]);
 
   return (
     <div className="app-shell">
@@ -61,9 +72,9 @@ export default function Home() {
             {/* Desktop sidebar notes */}
             <div className="notes-panel">
               <Notes
-                value={getNote(currentMonthKey)}
-                onChange={val => saveNote(currentMonthKey, val)}
-                title={`${monthName} Memos`}
+                value={getNote(activeNoteKey)}
+                onChange={val => saveNote(activeNoteKey, val)}
+                title={notesTitle}
               />
             </div>
 
@@ -80,9 +91,9 @@ export default function Home() {
           {/* ── Mobile: stacked notes below grid ── */}
           <div className="mobile-notes-section">
             <Notes
-              value={getNote(currentMonthKey)}
-              onChange={val => saveNote(currentMonthKey, val)}
-              title={`${monthName} Memos`}
+              value={getNote(activeNoteKey)}
+              onChange={val => saveNote(activeNoteKey, val)}
+              title={notesTitle}
             />
           </div>
 

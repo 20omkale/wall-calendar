@@ -12,7 +12,7 @@ interface GridProps {
   currentDate: Date;
   range: DateRange;
   onDateClick: (date: Date) => void;
-  getDayState: (date: Date) => 'none' | 'start' | 'end' | 'middle';
+  getDayState: (date: Date) => string;
   onClearRange: () => void;
 }
 
@@ -58,7 +58,9 @@ export const Grid: React.FC<GridProps> = ({
       {/* Days grid */}
       <div className="days-grid">
         {days.map(day => {
-          const state        = getDayState(day);
+          const rawState     = getDayState(day);
+          const isActive     = rawState.startsWith('active-');
+          const state        = rawState.replace('active-', '');
           const inMonth      = isSameMonth(day, monthStart);
           const isTodayDate  = isToday(day);
           const dow          = getDay(day);           // 0=Sun 6=Sat
@@ -71,6 +73,10 @@ export const Grid: React.FC<GridProps> = ({
           if (state === 'start')  bgClass = 'day-range-bg rng-start';
           if (state === 'end')    bgClass = 'day-range-bg rng-end';
 
+          if (isActive && state !== 'none') {
+            bgClass += ' is-active-bg';
+          }
+
           // Number bubble classes
           const numClasses: string[] = ['day-num'];
           if (!inMonth)                         numClasses.push('is-other-month');
@@ -80,6 +86,11 @@ export const Grid: React.FC<GridProps> = ({
           if (state === 'end')                  numClasses.push('is-selected-end');
           if (state === 'middle')               numClasses.push('is-range-mid');
           if (state === 'none')                 numClasses.push('is-normal');
+
+          if (!isActive && state !== 'none') {
+            numClasses.push('is-passive-num');
+            bgClass += ' is-passive-bg';
+          }
 
           return (
             <div

@@ -445,6 +445,23 @@ body {
 
 .day-num.is-range-mid { color: var(--accent-dark); font-weight: 600; }
 
+/* Passive (non-active) range styling */
+.day-range-bg.is-passive-bg {
+  background: #e2e8f0;
+  opacity: 0.7;
+}
+
+.day-num.is-selected-start.is-passive-num,
+.day-num.is-selected-end.is-passive-num {
+  background: #94a3b8; /* text-light */
+  box-shadow: none;
+}
+
+.day-num.is-range-mid.is-passive-num {
+  color: #64748b; /* text-muted */
+  font-weight: 500;
+}
+
 /* Today indicator */
 .day-num.is-today::after {
   content: '';

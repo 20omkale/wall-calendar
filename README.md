@@ -8,9 +8,9 @@ A **production-grade interactive wall calendar** built with Next.js 16, TypeScri
 
 ## ✨ Features
 
-- **📅 Date Range Selection** — Click any two dates to highlight a range with rounded pill-style highlighting and a summary bar showing the number of days selected
+- **📅 Multiple Event Selection** — Manage an unlimited amount of date ranges (trips, events) across different months simultaneously, with active/passive visual hierarchy
 - **🎨 Dynamic Monthly Theming** — Each month has its own accent color and seasonal image. Theme is applied globally via CSS custom properties injected at runtime
-- **🗒️ Persistent Notes** — A lined-paper memo area per month, saved automatically to `localStorage` so notes survive page refreshes
+- **🗒️ Contextual Persistent Memos** — A lined-paper notepad that seamlessly attaches specific notes to whatever date range you've selected, stored natively in `localStorage`
 - **🎉 Holiday Markers** — 19 holidays across the year shown as emoji badges on the calendar, with hover tooltips showing the holiday name
 - **📖 Page-Flip Animation** — Smooth CSS keyframe animation on every month navigation
 - **📱 Fully Responsive** — Side-by-side panel layout on desktop (no scroll), gracefully stacked on mobile with touch-friendly targets
@@ -102,7 +102,7 @@ The physical calendar aesthetic required precise control over custom animations,
 The `Header` component reads a `MONTH_DATA` map and calls `document.documentElement.style.setProperty('--accent', ...)` on mount and whenever the month changes. All color-dependent CSS reads from these variables, so the entire UI recolors instantly without re-renders.
 
 ### How is the range selection implemented?
-`useCalendar` maintains a `{ start, end }` state. On first click, `start` is set. On second click, if the new date is after `start`, `end` is set (with auto-swap if before). `getDayState(date)` returns `'start' | 'end' | 'middle' | 'none'` for each cell, which drives CSS class assignment in `Grid.tsx`.
+`useCalendar` maintains an array of `savedRanges`. On first click, a `draftStart` is set. On second click, a fully-fledged `DateRange` object is appended. `getDayState(date)` iterates through all saved ranges to paint the UI, distinguishing between the specific `active` range you are editing notes for, and passively parked upcoming ranges.
 
 ---
 

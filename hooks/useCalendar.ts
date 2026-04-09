@@ -1,10 +1,53 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { addMonths, subMonths, format, isSameDay, isWithinInterval, isAfter, isBefore } from 'date-fns';
 import { DateRange, CalendarMonth } from '@/types/calendar';
 
 export const useCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [range, setRange] = useState<DateRange>({ start: null, end: null });
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load saved calendar perspective on mount
+  useEffect(() => {
+    const savedDate = localStorage.getItem('calendar-current-date');
+    if (savedDate) {
+      const parsedDate = new Date(savedDate);
+      if (!isNaN(parsedDate.getTime())) {
+        setCurrentDate(parsedDate);
+      }
+    }
+
+    const savedRange = localStorage.getItem('calendar-range');
+    if (savedRange) {
+      try {
+        const parsed = JSON.parse(savedRange);
+        setRange({
+          start: parsed.start ? new Date(parsed.start) : null,
+          end: parsed.end ? new Date(parsed.end) : null,
+        });
+      } catch (e) {
+        console.error('Failed to parse saved calendar range', e);
+      }
+    }
+    
+    setIsInitialized(true);
+  }, []);
+
+  // Persist calendar state automatically after initialization
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('calendar-current-date', currentDate.toISOString());
+    }
+  }, [currentDate, isInitialized]);
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('calendar-range', JSON.stringify({
+        start: range.start ? range.start.toISOString() : null,
+        end: range.end ? range.end.toISOString() : null,
+      }));
+    }
+  }, [range, isInitialized]);
 
   const nextMonth = useCallback(() => setCurrentDate(prev => addMonths(prev, 1)), []);
   const prevMonth = useCallback(() => setCurrentDate(prev => subMonths(prev, 1)), []);
